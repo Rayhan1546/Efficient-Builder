@@ -1,22 +1,24 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+# Efficient Builder
+A streamlined Flutter state management solution focused on optimizing widget rebuilds and clean state organization. Efficient Builder addresses the common challenge of unnecessary rebuilds when using ValueNotifier, while promoting a clean separation of states and ViewModels.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+* **Controlled Widget Rebuilds**
+   * Fine-grained control over which widgets rebuild and when
+   * Optimize performance by preventing unnecessary rebuilds
+
+* **Clean Architecture Support**
+   * Separate state definitions from ViewModel logic
+   * Maintain clear boundaries between UI, state, and business logic
+
+* **Simple Integration**
+   * Minimal setup required
+   * Works seamlessly with existing Flutter projects
+
+* **Type-safe State Management**
+   * Full type safety for your states
+   * Compile-time error catching
+  
 
 ## Getting started
 
@@ -25,15 +27,171 @@ start using the package.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+**Define Your State**
 
 ```dart
-const like = 'sample';
+class LoginStates {
+  final String email;
+  final String password;
+  final bool showButton;
+  final ValidationError? emailError;
+  final ValidationError? passwordError;
+
+  LoginStates({
+    required this.email,
+    required this.password,
+    required this.showButton,
+    this.emailError,
+    this.passwordError,
+  });
+
+  factory LoginStates.initial() {
+    return LoginStates(
+      email: '',
+      password: '',
+      showButton: false,
+    );
+  }
+
+  LoginStates copyWith({
+    String? email,
+    String? password,
+    bool? showButton,
+    ValidationError? emailError,
+    ValidationError? passwordError,
+  }) {
+    return LoginStates(
+      email: email ?? this.email,
+      password: password ?? this.password,
+      showButton: showButton ?? this.showButton,
+      emailError: emailError ?? this.emailError,
+      passwordError: passwordError ?? this.passwordError,
+    );
+  }
+}
 ```
 
-## Additional information
+**Make ViewModel**
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+class LoginViewModel {
+  final _loginStates = ValueNotifier<LoginStates>(LoginStates.initial());
+
+  LoginStates get _states => _loginStates.value;
+
+  ValueListenable<LoginStates> get loginStates => _loginStates;
+
+  void onChangedEmail({required String? email}) {
+    final emailError = EmailValidator.getEmailValidation(email);
+
+    _loginStates.value = _states.copyWith(
+      emailError: emailError,
+      email: email,
+    );
+
+    _checkUpdateButtonState();
+  }
+
+  void onChangedPassword({required String? password}) {
+    final passwordError = PasswordValidator.getValidationError(password);
+
+    _loginStates.value = _states.copyWith(
+      passwordError: passwordError,
+      password: password,
+    );
+
+    _checkUpdateButtonState();
+  }
+
+  void _checkUpdateButtonState() {
+    final hasAllFieldsFilled = _states.email.isNotEmpty && _states.password.isNotEmpty;
+
+    final hasNoErrors = _states.emailError == ValidationError.none &&
+        _states.passwordError == ValidationError.none;
+
+    _loginStates.value = _states.copyWith(
+      showButton: hasNoErrors && hasAllFieldsFilled,
+    );
+  }
+
+  void onTapLoginButton() {
+    _loginStates.value = _states.copyWith(
+      showButton: false,
+    );
+  }
+
+  void onDispose() {
+    _loginStates.dispose();
+  }
+}
+
+```
+
+### Efficient Builder
+
+``` dart
+  Widget _buildEmailField(BuildContext context) {
+    return EfficientBuilder(
+      buildWhen: (p, n) {
+        return p.emailError != n.emailError;
+      },
+      valueListenable: _viewModel.loginStates,
+      builder: (context, state, _) {
+        return CustomTextField(
+          controller: _emailController,
+          textFieldName: 'Email',
+          textFieldType: TextFieldType.email,
+          errorText: state.emailError?.getError(),
+          onChanged: (email) => _viewModel.onChangedEmail(email: email),
+        );
+      },
+    );
+  }
+```
+
+### Build Method Extension
+
+``` dart 
+  Widget _buildPasswordField(BuildContext context) {
+    return _viewModel.loginStates.build(
+      buildWhen: (p, n) {
+        return p.passwordError != n.passwordError;
+      },
+      builder: (context, state) {
+        return CustomTextField(
+          controller: _passwordController,
+          textFieldName: 'Password',
+          errorText: state.passwordError?.getError(),
+          textFieldType: TextFieldType.password,
+          onChanged: (password) {
+            _viewModel.onChangedPassword(password: password);
+          },
+        );
+      },
+    );
+  }
+```
+
+
+### BuilFor Extension
+
+```dart
+  Widget _buildLogInButton(BuildContext context) {
+    return _viewModel.loginStates.buildFor(
+      select: (state) => state.showButton,
+      builder: (context, state) {
+        return PrimaryButton(
+          label: "LOG IN",
+          onPressed: () {
+            onTapLogIn();
+            _viewModel.onTapLoginButton();
+          },
+          minWidth: double.infinity,
+          isDisabled: !state.showButton,
+        );
+      },
+    );
+  }
+```
+
+
