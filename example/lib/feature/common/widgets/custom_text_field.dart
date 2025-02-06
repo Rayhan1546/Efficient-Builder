@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum TextFieldType {
-  email,
-  password,
-  number,
-  text
-}
+enum TextFieldType { email, password, number, text }
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -66,7 +61,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return TextFormField(
       controller: widget.controller,
       enabled: widget.enable,
-      obscureText: widget.textFieldType == TextFieldType.password ? !_isPasswordVisible : false,
+      obscureText: widget.textFieldType == TextFieldType.password
+          ? !_isPasswordVisible
+          : false,
       onChanged: widget.onChanged,
       keyboardType: _getKeyboardType(),
       inputFormatters: _getInputFormatters(),
@@ -84,18 +81,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         suffixIcon: widget.textFieldType == TextFieldType.password
             ? IconButton(
-          icon: Icon(
-            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: widget.enable == false ? Colors.grey : _labelColor,
-          ),
-          onPressed: widget.enable == false
-              ? null
-              : () {
-            setState(() {
-              _isPasswordVisible = !_isPasswordVisible;
-            });
-          },
-        )
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: widget.enable == false ? Colors.grey : _labelColor,
+                ),
+                onPressed: widget.enable == false
+                    ? null
+                    : () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+              )
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),

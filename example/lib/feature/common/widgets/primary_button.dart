@@ -35,7 +35,7 @@ class PrimaryButton extends StatelessWidget {
       onPressed: isDisabled ? null : onPressed,
       minWidth: minWidth,
       color:
-      isDisabled ? defaultDisabledColor : buttonColor ?? defaultButtonColor,
+          isDisabled ? defaultDisabledColor : buttonColor ?? defaultButtonColor,
       disabledColor: defaultDisabledColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),

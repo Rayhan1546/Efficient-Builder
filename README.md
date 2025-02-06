@@ -18,12 +18,22 @@ A streamlined Flutter state management solution focused on optimizing widget reb
 * **Type-safe State Management**
    * Full type safety for your states
    * Compile-time error catching
-  
+
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+1.Add the package to your pubspec.yaml:
+
+```yaml
+dependencies:
+  efficient_builder: ^1.0.0
+```
+
+2.Import it in your code:
+
+```dart
+import 'package:efficient_builder/efficient_builder.dart';
+```
 
 ## Usage
 
@@ -173,7 +183,7 @@ class LoginViewModel {
 ```
 
 
-### BuilFor Extension
+### BuildFor Extension
 
 ```dart
   Widget _buildLogInButton(BuildContext context) {

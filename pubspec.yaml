@@ -1,10 +1,10 @@
 name: efficient_builder
-description: "A new Flutter package project."
-version: 0.0.1
-homepage:
+description: A simple statemanagement solution for valuenotifier.
+version: 1.0.0
+repository: https://github.com/Rayhan1546/Efficient-Builder
 
 environment:
-  sdk: ^3.5.3
+  sdk: ">=3.5.3 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:

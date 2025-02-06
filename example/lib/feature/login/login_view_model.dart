@@ -34,7 +34,8 @@ class LoginViewModel {
   }
 
   void _checkUpdateButtonState() {
-    final hasAllFieldsFilled = _states.email.isNotEmpty && _states.password.isNotEmpty;
+    final hasAllFieldsFilled =
+        _states.email.isNotEmpty && _states.password.isNotEmpty;
 
     final hasNoErrors = _states.emailError == ValidationError.none &&
         _states.passwordError == ValidationError.none;
