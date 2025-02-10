@@ -1,5 +1,5 @@
 name: efficient_builder
-description: A simple statemanagement solution for valuenotifier.
+description: An Alternative to ValueListenableBuilder in Flutter.
 version: 1.0.1
 repository: https://github.com/Rayhan1546/Efficient-Builder
 

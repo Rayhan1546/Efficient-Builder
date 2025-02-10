@@ -1,5 +1,7 @@
 # Efficient Builder
-A streamlined Flutter state management solution focused on optimizing widget rebuilds and clean state organization. Efficient Builder addresses the common challenge of unnecessary rebuilds when using ValueNotifier, while promoting a clean separation of states and ViewModels.
+*An Enhanced Alternative to ValueListenableBuilder*
+
+Efficient Builder offers a more robust alternative to Flutter's ValueListenableBuilder, enhancing how widgets react to state changes. It overcomes common limitations associated with ValueNotifier by implementing a separation technique that extracts states from the ViewModel into a distinct class. Additionally, it resolves issues related to unnecessary rebuilding and state changes, providing more granular control over UI states.
 
 ## Features
 
@@ -26,7 +28,7 @@ A streamlined Flutter state management solution focused on optimizing widget reb
 
 ```yaml
 dependencies:
-  efficient_builder: ^1.0.0
+  efficient_builder: ^1.0.1
 ```
 
 2.Import it in your code:
