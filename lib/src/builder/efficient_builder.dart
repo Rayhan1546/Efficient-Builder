@@ -48,12 +48,8 @@ class _EfficientBuilderState<T> extends State<EfficientBuilder<T>> {
   void _valueChanged() {
     final newValue = widget.valueListenable.value;
 
-    if (widget.buildWhen == null || widget.buildWhen!(value, newValue)) {
-      setState(() {
-        value = widget.valueListenable.value;
-      });
-    } else {
-      value = newValue;
+    if (widget.buildWhen?.call(value, newValue) ?? true) {
+      setState(() => value = newValue);
     }
   }
 
